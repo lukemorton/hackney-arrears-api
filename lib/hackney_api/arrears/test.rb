@@ -8,14 +8,33 @@ module HackneyAPI
         client.operations
       end
 
+      def user_name_and_password
+        direct_user
+      end
+
       def get_arrears_agreement_list
-        client.call(:get_arrears_agreement_list, message: { dto: { agreement_search: { max_records: 10 } } })
+        client.call(:get_arrears_agreement_list, message: {
+          direct_user: direct_user,
+          source_system: source_system,
+          agreement_search: { max_records: 10 }
+        })
       end
 
       private
 
       def wsdl_url
         "#{ENV['UH_WS_ENDPOINT']}/ArrearsAgreementService.svc?wsdl"
+      end
+
+      def direct_user
+        {
+          user_name: ENV['UH_WS_USER_NAME'],
+          user_password: ENV['UH_WS_USER_PASSWORD']
+        }
+      end
+
+      def source_system
+        ENV['UH_WS_SOURCE_SYSTEM']
       end
 
       def client
@@ -32,6 +51,9 @@ puts "We found some Arrears operations:"
 test_api.operations.each do |operation|
    puts "- #{operation}"
 end
+
+puts
+puts test_api.user_name_and_password
 
 puts
 puts "Trying to retrieve a list of arrears agreements..."
