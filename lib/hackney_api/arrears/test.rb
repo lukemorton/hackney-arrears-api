@@ -21,7 +21,7 @@ module HackneyAPI
           dto: {
             DirectUser: direct_user,
             SourceSystem: source_system,
-            AgreementSearch: { MaxRecords: 10 }
+            AgreementSearch: search_criteria
           }
         })
       end
@@ -41,6 +41,13 @@ module HackneyAPI
 
       def source_system
         ENV['UH_WS_SOURCE_SYSTEM']
+      end
+
+      def search_criteria
+        {
+          PropertyRef: ENV['UH_WS_EXAMPLE_PROPERTY_REF'],
+          MaxRecords: 10
+        }
       end
 
       def client
